@@ -3,28 +3,30 @@ package smart
 // Ported from
 // http://stackoverflow.com/questions/667803/what-is-the-best-algorithm-for-arbitrary-delimiter-escape-character-processing
 
-func Split(input, delimiter, escape string) []string {
-	parsing := false
-	escaped := true
+const (
+	stateParsing = false
+	stateEscaped = true
+)
 
-	state := parsing
+func Split(input, delimiter, escape string) []string {
+	state := stateParsing
 	found := make([]string, 0)
 	parsed := ""
 
 	for _, c := range input {
 		c := string(c)
-		if state == parsing {
+		if state == stateParsing {
 			if c == delimiter {
 				found = append(found, parsed)
 				parsed = ""
 			} else if c == escape {
-				state = escaped
+				state = stateEscaped
 			} else {
 				parsed += c
 			}
 		} else {
 			parsed += c
-			state = parsing
+			state = stateParsing
 		}
 	}
 
